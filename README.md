@@ -6,7 +6,11 @@ A cross-platform, JavaFX based clone of [D-Feet](https://wiki.gnome.org/Apps/DFe
 
 ## Installation
 
-Installers and packages are provided for Linux, Windows and Mac OS. Either download and running the GUI installers, or choose a package format appropriate for your desktop. 
+Installers and packages are provided for Linux, Windows and Mac OS. Either download and running the GUI installers, or choose a package format appropriate for your desktop.
+
+ * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.0/dj-feet_unix_1_0_0.sh)  
+ * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.0/dj-feet_macos_1_0_0.dmg)  
+ * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.0/dj-feet_windows-x64_1_0_0.exe)
 
 ## Usage
 
