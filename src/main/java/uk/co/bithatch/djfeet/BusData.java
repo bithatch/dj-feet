@@ -36,8 +36,10 @@ public class BusData implements Comparable<BusData> {
 		return name;
 	}
 
+	@Override
 	public String toString() {
-		return name;
+		return "BusData [name=" + name + ", activatable=" + activatable + ", pid=" + pid + ", cmd=" + cmd + ", owner="
+				+ owner + "]";
 	}
 
 	@Override
@@ -50,5 +52,9 @@ public class BusData implements Comparable<BusData> {
 			return -1;
 		} else
 			return an.compareTo(bn);
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;		
 	}
 }

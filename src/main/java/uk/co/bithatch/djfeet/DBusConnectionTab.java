@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +58,7 @@ public class DBusConnectionTab extends Tab {
 	private TreeView<BusTreeData> objects;
 	private FilteredList<BusData> filteredData;
 	private ObservableList<BusData> names;
+	private List<String> activatable;
 
 	public DBusConnectionTab(String text, DBusConnection connection) throws DBusException {
 		super(text);
@@ -65,7 +67,36 @@ public class DBusConnectionTab extends Tab {
 		dbus = connection.getRemoteObject("org.freedesktop.DBus", "/org/freedesktop/DBus", DBus.class);
 
 		connection.addSigHandler(DBus.NameOwnerChanged.class, (e) -> {
-			refresh();
+			if (e.oldOwner.equals("") && !e.newOwner.equals("")) {
+				var newBusData = createBusData(e.name, e.newOwner);
+				Platform.runLater(() -> {
+					names.add(0, newBusData);
+					Collections.sort(names);
+				});
+			} else if (e.newOwner.equals("") && !e.oldOwner.equals("")) {
+				Platform.runLater(() -> {
+					for (Iterator<BusData> bdIt = names.iterator(); bdIt.hasNext();) {
+						BusData bd = bdIt.next();
+						if (e.oldOwner.equals(bd.getOwner())) {
+							bdIt.remove();
+							break;
+						}
+					}
+					Collections.sort(names);
+				});
+			} else {
+				Platform.runLater(() -> {
+					for (Iterator<BusData> bdIt = names.iterator(); bdIt.hasNext();) {
+						BusData bd = bdIt.next();
+						if (e.oldOwner.equals(bd.getOwner())) {
+							bd.setOwner(e.newOwner);
+							busNames.refresh();
+							break;
+						}
+					}
+					Collections.sort(names);
+				});
+			}
 		});
 
 		/*
@@ -73,7 +104,6 @@ public class DBusConnectionTab extends Tab {
 		 * activatable names as well.
 		 */
 		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
-		List<String> activatable;
 		try {
 			activatable = Arrays.asList(dbus.ListActivatableNames());
 		} catch (DBusExecutionException dbe) {
@@ -83,7 +113,7 @@ public class DBusConnectionTab extends Tab {
 			activatable = Collections.emptyList();
 		}
 		allNames.addAll(activatable);
-		names = getBusNames(activatable, allNames);
+		names = getBusNames(allNames);
 		Collections.sort(names);
 		filteredData = new FilteredList<>(names, s -> true);
 
@@ -168,23 +198,6 @@ public class DBusConnectionTab extends Tab {
 		update();
 	}
 
-	void refresh() {
-		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
-		List<String> activatable;
-		try {
-			activatable = Arrays.asList(dbus.ListActivatableNames());
-		} catch (DBusExecutionException dbe) {
-			/*
-			 * TODO: dbus-java is returning null here, should be empty array?
-			 */
-			activatable = Collections.emptyList();
-		}
-		allNames.addAll(activatable);
-		ObservableList<BusData> names = getBusNames(activatable, allNames);
-		Collections.sort(names);
-		Platform.runLater(() -> this.names.setAll(names));
-	}
-
 	void loadProperty(PropertyData propData) {
 		try {
 			Properties props = connection.getRemoteObject(
@@ -203,24 +216,27 @@ public class DBusConnectionTab extends Tab {
 		exec.show();
 	}
 
-	ObservableList<BusData> getBusNames(List<String> activatable, Set<String> allNames) {
-		return FXCollections.observableArrayList(allNames.stream().map(n -> {
-			long pid = -1;
-			String cmd = null;
-			String owner = null;
-			try {
+	ObservableList<BusData> getBusNames(Set<String> allNames) {
+		return FXCollections.observableArrayList(
+				allNames.stream().map(n -> createBusData(n, null)).collect(Collectors.toList()).toArray(new BusData[0]));
+	}
+
+	BusData createBusData(String n, String owner) {
+		long pid = -1;
+		String cmd = null;
+		try {
+			if(owner == null)
 				owner = dbus.GetNameOwner(n);
-				pid = dbus.GetConnectionUnixProcessID(n).longValue();
-				Path p = Paths.get("/proc/" + pid + "/cmdline");
-				if (Files.exists(p)) {
-					try (BufferedReader r = Files.newBufferedReader(p)) {
-						cmd = String.join(" ", r.readLine().split("\0"));
-					}
+			pid = dbus.GetConnectionUnixProcessID(n).longValue();
+			Path p = Paths.get("/proc/" + pid + "/cmdline");
+			if (Files.exists(p)) {
+				try (BufferedReader r = Files.newBufferedReader(p)) {
+					cmd = String.join(" ", r.readLine().split("\0"));
 				}
-			} catch (Exception e) {
 			}
-			return new BusData(n, activatable.contains(n), pid, cmd, owner);
-		}).collect(Collectors.toList()).toArray(new BusData[0]));
+		} catch (Exception e) {
+		}
+		return new BusData(n, activatable.contains(n), pid, cmd, owner);
 	}
 
 	boolean isStrong(TreeItem<BusTreeData> item) {
