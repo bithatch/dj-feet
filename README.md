@@ -8,9 +8,9 @@ A cross-platform, JavaFX based clone of [D-Feet](https://wiki.gnome.org/Apps/DFe
 
 Installers are provided for Linux, Windows and Mac OS. Download and run the GUI installers appropriate for your desktop.
 
- * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.1/dj-feet_unix_1_0_1.sh)  
- * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.1/dj-feet_macos_1_0_1.dmg)  
- * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.1/dj-feet_windows-x64_1_0_1.exe)
+ * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_unix_1_0_2.sh)  
+ * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_macos_1_0_2.dmg)  
+ * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_windows-x64_1_0_2.exe)
 
 ## Usage
 
@@ -52,8 +52,9 @@ With the installers, also included are easy launchers for all of the [dbus-java-
 
 ### 1.0.2
 
- * Windows not automatically loading `dbus-java-daermon` if it is installed.
+ * Windows dj-feet not automatically loading `dbus-java-daermon` if it is installed.
  * Re-install may fail on Windows due to JRE file being in use.
+ * Better internal monitoring of bus events.
 
 ### 1.0.1
 
