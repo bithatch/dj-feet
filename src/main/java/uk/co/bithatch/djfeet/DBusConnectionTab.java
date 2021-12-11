@@ -65,7 +65,6 @@ public class DBusConnectionTab extends Tab {
 		 * activatable names as well.
 		 */
 		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
-		System.out.println(String.join(",", allNames));
 		List<String> activatable;
 		try {
 			activatable = Arrays.asList(dbus.ListActivatableNames());
@@ -319,7 +318,6 @@ public class DBusConnectionTab extends Tab {
 	}
 
 	TreeItem<BusTreeData> createSignalNode(Element element) {
-		System.out.println(element);
 		var signalData = new SignalData(element.attr("name"));
 		TreeItem<BusTreeData> methodItem = new TreeItem<>(signalData);
 		for (Element memberEl : element.children()) {
