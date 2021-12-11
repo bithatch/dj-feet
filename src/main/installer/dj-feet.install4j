@@ -158,7 +158,7 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
         <classPath>
           <scanDirectory location="lib" failOnError="false" />
           <scanDirectory location="lib/linux" failOnError="false" />
-          <scanDirectory location="lib/linux" failOnError="false" />
+          <scanDirectory location="lib/win" failOnError="false" />
           <scanDirectory location="lib/mac" failOnError="false" />
         </classPath>
       </java>

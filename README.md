@@ -47,6 +47,16 @@ With the installers, also included are easy launchers for all of the [dbus-java-
  * `dbus-java-interface-code-generator`. Geneate a Java interface from exported objects.
  * `dbus-java-viewer`. Simple Swing UI based viewer.
  * `dbus-java-type-string-to-java`. Convert a DBus type string to Java.
+ 
+## Changes
+
+### 1.0.1
+
+ * Windows had incorrect classpath for dj-feet.exe.
+
+### 1.0.0
+
+ * Initial release
 
 ## Development
 
