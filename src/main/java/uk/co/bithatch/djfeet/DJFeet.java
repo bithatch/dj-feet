@@ -3,6 +3,7 @@ package uk.co.bithatch.djfeet;
 import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.prefs.Preferences;
 
 import org.freedesktop.dbus.connections.impl.DBusConnection;
 import org.freedesktop.dbus.connections.impl.DBusConnection.DBusBusType;
@@ -48,8 +49,8 @@ public class DJFeet {
 												DBusConnection.getConnection(DBusBusType.SESSION)));
 									} catch (Exception e) {
 									}
+									String address = null;
 									try {
-										String address = null;
 										try (BufferedReader reader = Files
 												.newBufferedReader(Paths.get(System.getProperty("java.io.tmpdir"))
 														.resolve("dbus-java.address"))) {
@@ -58,7 +59,14 @@ public class DJFeet {
 										getTabs().add(new DBusConnectionTab("D-Bus Java",
 												DBusConnection.getConnection(address)));
 									} catch (Exception e) {
-										e.printStackTrace();
+										try  {
+											address = Preferences.systemNodeForPackage(DJFeet.class).get("dbusAddress", null);
+											if(address != null)
+												getTabs().add(new DBusConnectionTab("D-Bus Java",
+														DBusConnection.getConnection(address)));
+										} 
+										catch(Exception e2) {
+										}
 									}
 									int insertPoint = getTabs().size();
 									try {

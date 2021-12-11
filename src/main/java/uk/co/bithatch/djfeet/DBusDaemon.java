@@ -325,10 +325,16 @@ public class DBusDaemon extends Thread implements Closeable {
                     addrfile = args[++i];
                 } else if ("--addresspref".equals(args[i]) || "-A".equals(args[i])) {
                 	String prefspec = args[++i]; 
-                	int idx = prefspec.indexOf(':');
-                	String node = idx == -1 ? prefspec : prefspec.substring(0, idx);
-                	addrkey = idx == -1 ? "dbusAddress" : prefspec.substring(idx + 1);
-                    addrpref = Preferences.systemRoot().node(node);
+                	if(prefspec.equals("default")) {
+                		addrkey = "dbusAddress";
+                		addrpref = Preferences.systemNodeForPackage(DBusDaemon.class);
+                	}
+                	else {
+	                	int idx = prefspec.indexOf(':');
+	                	String node = idx == -1 ? prefspec : prefspec.substring(0, idx);
+	                	addrkey = idx == -1 ? "dbusAddress" : prefspec.substring(idx + 1);
+	                    addrpref = Preferences.systemRoot().node(node);	
+                	}
                 } else if ("--print-address".equals(args[i]) || "-r".equals(args[i])) {
                     printaddress = true;
                 } else if ("--unix".equals(args[i]) || "-u".equals(args[i])) {

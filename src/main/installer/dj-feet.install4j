@@ -168,7 +168,7 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
     </launcher>
     <launcher name="dbus-java-daemon" id="47">
       <executable name="dbus-java-daemon" iconSet="true" stderrFile="daemon-error.log" redirectStdout="true" stdoutFile="daemon-output.log" executableMode="service" />
-      <java mainClass="uk.co.bithatch.djfeet.DBusDaemon" arguments="--addressfile ${installer:sys.tempDir}/dbus-java.address --insecure --tcp --authmode AUTH_ANONYMOUS">
+      <java mainClass="uk.co.bithatch.djfeet.DBusDaemon" arguments="--addresspref default --addressfile ${installer:sys.tempDir}/dbus-java.address --insecure --tcp --authmode AUTH_ANONYMOUS">
         <classPath>
           <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
           <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
