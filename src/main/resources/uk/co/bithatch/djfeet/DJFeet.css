@@ -1,0 +1,10 @@
+.tree-cell {
+    -fx-font-weight: normal ;
+}
+.tree-cell:group, .strong {
+    -fx-font-weight: bold ;
+}
+
+.spaced {
+	-fx-padding: 4px;
+}
