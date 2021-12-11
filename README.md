@@ -6,7 +6,7 @@ A cross-platform, JavaFX based clone of [D-Feet](https://wiki.gnome.org/Apps/DFe
 
 ## Installation
 
-Installers and packages are provided for Linux, Windows and Mac OS. Either download and run the GUI installers, or choose a package format appropriate for your desktop.
+Installers are provided for Linux, Windows and Mac OS. Download and run the GUI installers appropriate for your desktop.
 
  * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.0/dj-feet_unix_1_0_0.sh)  
  * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.0/dj-feet_macos_1_0_0.dmg)  
@@ -18,7 +18,7 @@ What is available when you start the application will depend on the operating sy
 
  * On any operating system, if you have installed the provided default `dbus-java-daemon`, it will also be shown.
  
- * Linux, you will see the *System* bus, and the *Session* by default. 
+ * Linux, you will see the *System Bus*, and the *Session Bus* by default. 
  
  * If there are no default buses available, you will be immediately prompted for a bus address.
 
