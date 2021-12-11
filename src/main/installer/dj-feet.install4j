@@ -153,7 +153,7 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       </iconImageFiles>
     </launcher>
     <launcher name="dj-feet" id="42">
-      <executable name="dj-feet" iconSet="true" executableMode="gui" />
+      <executable name="dj-feet" iconSet="true" executableMode="gui" checkConsoleParameter="true" />
       <java mainClass="uk.co.bithatch.djfeet.DJFeet">
         <classPath>
           <scanDirectory location="lib" failOnError="false" />
@@ -167,7 +167,7 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       </iconImageFiles>
     </launcher>
     <launcher name="dbus-java-daemon" id="47">
-      <executable name="dbus-java-daemon" iconSet="true" redirectStderr="false" executableMode="service" />
+      <executable name="dbus-java-daemon" iconSet="true" stderrFile="daemon-error.log" redirectStdout="true" stdoutFile="daemon-output.log" executableMode="service" />
       <java mainClass="uk.co.bithatch.djfeet.DBusDaemon" arguments="--addressfile ${installer:sys.tempDir}/dbus-java.address --insecure --tcp --authmode AUTH_ANONYMOUS">
         <classPath>
           <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
@@ -302,6 +302,7 @@ return console.askOkCancel(message, true);
           </screen>
           <screen id="15" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" rollbackBarrier="true" rollbackBarrierExitCode="0">
             <actions>
+              <action id="57" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" actionElevationType="none" rollbackBarrierExitCode="0" />
               <action id="17" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" failureStrategy="quit" errorMessage="${i18n:FileCorrupted}" />
               <action id="18" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
                 <serializedBean>
@@ -355,6 +356,16 @@ return console.askOkCancel(message, true);
             <actions>
               <action id="33" beanClass="com.install4j.runtime.beans.actions.misc.LoadResponseFileAction" rollbackBarrierExitCode="0" />
               <action id="34" beanClass="com.install4j.runtime.beans.actions.misc.RequireInstallerPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0" />
+              <action id="56" beanClass="com.install4j.runtime.beans.actions.misc.RequestPrivilegesAction" actionElevationType="none" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="failIfNotObtainedLinux" type="boolean" value="true" />
+                  <property name="failIfNotRootUnix" type="boolean" value="true" />
+                  <property name="linuxPrivilegeRequirement" type="enum" class="com.install4j.runtime.beans.actions.misc.PrivilegeRequirement" value="OBTAIN" />
+                  <property name="obtainIfAdminMac" type="boolean" value="true" />
+                  <property name="obtainIfNormalMac" type="boolean" value="true" />
+                  <property name="obtainIfNormalWin" type="boolean" value="true" />
+                </serializedBean>
+              </action>
             </actions>
           </screen>
         </startup>
@@ -382,6 +393,11 @@ return console.askYesNo(message, true);
           </screen>
           <screen id="27" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" rollbackBarrierExitCode="0">
             <actions>
+              <action id="55" beanClass="com.install4j.runtime.beans.actions.services.StopServiceAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="launcherId" type="string">47</property>
+                </serializedBean>
+              </action>
               <action id="29" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" actionElevationType="elevated" rollbackBarrierExitCode="0" />
             </actions>
             <formComponents>

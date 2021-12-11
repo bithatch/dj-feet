@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.prefs.Preferences;
 
 import org.freedesktop.dbus.Marshalling;
 import org.freedesktop.dbus.bin.Activator;
@@ -302,6 +303,8 @@ public class DBusDaemon extends Thread implements Closeable {
         boolean tcp = false;
         boolean insecure = false;
         SaslAuthMode authmode = null;
+        Preferences addrpref = null;
+        String addrkey = "dbusAddress";
 
         // parse options
         try {
@@ -320,6 +323,12 @@ public class DBusDaemon extends Thread implements Closeable {
                     pidfile = args[++i];
                 } else if ("--addressfile".equals(args[i]) || "-a".equals(args[i])) {
                     addrfile = args[++i];
+                } else if ("--addresspref".equals(args[i]) || "-A".equals(args[i])) {
+                	String prefspec = args[++i]; 
+                	int idx = prefspec.indexOf(':');
+                	String node = idx == -1 ? prefspec : prefspec.substring(0, idx);
+                	addrkey = idx == -1 ? "dbusAddress" : prefspec.substring(idx + 1);
+                    addrpref = Preferences.systemRoot().node(node);
                 } else if ("--print-address".equals(args[i]) || "-r".equals(args[i])) {
                     printaddress = true;
                 } else if ("--unix".equals(args[i]) || "-u".equals(args[i])) {
@@ -355,6 +364,11 @@ public class DBusDaemon extends Thread implements Closeable {
             saveFile(addr.replace("listen=true,", ""), addrfile, insecure);
         }
 
+        // print address to a preference key
+        if (null != addrpref) {
+        	addrpref.put(addrkey, addr.replace("listen=true,", ""));
+        }
+        
         // print PID to file
         if (null != pidfile) {
             saveFile(System.getProperty("Pid"), pidfile, insecure);

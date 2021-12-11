@@ -25,6 +25,7 @@ import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.tbee.javafx.scene.layout.MigPane;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -54,6 +55,8 @@ public class DBusConnectionTab extends Tab {
 	private DBus dbus;
 	private ListView<BusData> busNames;
 	private TreeView<BusTreeData> objects;
+	private FilteredList<BusData> filteredData;
+	private ObservableList<BusData> names;
 
 	public DBusConnectionTab(String text, DBusConnection connection) throws DBusException {
 		super(text);
@@ -61,7 +64,12 @@ public class DBusConnectionTab extends Tab {
 
 		dbus = connection.getRemoteObject("org.freedesktop.DBus", "/org/freedesktop/DBus", DBus.class);
 
-		/* Bus names. Note ListNames() does not seem to list all names, we must add the
+		connection.addSigHandler(DBus.NameOwnerChanged.class, (e) -> {
+			refresh();
+		});
+
+		/*
+		 * Bus names. Note ListNames() does not seem to list all names, we must add the
 		 * activatable names as well.
 		 */
 		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
@@ -75,9 +83,9 @@ public class DBusConnectionTab extends Tab {
 			activatable = Collections.emptyList();
 		}
 		allNames.addAll(activatable);
-		ObservableList<BusData> names = getBusNames(activatable, allNames);
+		names = getBusNames(activatable, allNames);
 		Collections.sort(names);
-		FilteredList<BusData> filteredData = new FilteredList<>(names, s -> true);
+		filteredData = new FilteredList<>(names, s -> true);
 
 		var busNameSearch = new TextField();
 		busNameSearch.setPromptText("🔍");
@@ -158,6 +166,23 @@ public class DBusConnectionTab extends Tab {
 
 		// First update
 		update();
+	}
+
+	void refresh() {
+		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
+		List<String> activatable;
+		try {
+			activatable = Arrays.asList(dbus.ListActivatableNames());
+		} catch (DBusExecutionException dbe) {
+			/*
+			 * TODO: dbus-java is returning null here, should be empty array?
+			 */
+			activatable = Collections.emptyList();
+		}
+		allNames.addAll(activatable);
+		ObservableList<BusData> names = getBusNames(activatable, allNames);
+		Collections.sort(names);
+		Platform.runLater(() -> this.names.setAll(names));
 	}
 
 	void loadProperty(PropertyData propData) {
@@ -451,7 +476,7 @@ public class DBusConnectionTab extends Tab {
 			args.getChildren().addAll(((PropertyData) item).typeGraphic());
 			args.getChildren().add(label);
 			args.getChildren().add(access);
-			if(((PropertyData) item).getValue() != null) {
+			if (((PropertyData) item).getValue() != null) {
 				val.setText(" = " + ((PropertyData) item).getFormattedValue());
 				args.getChildren().add(val);
 			}

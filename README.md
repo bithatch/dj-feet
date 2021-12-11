@@ -50,6 +50,11 @@ With the installers, also included are easy launchers for all of the [dbus-java-
  
 ## Changes
 
+### 1.0.2
+
+ * Windows not automatically loading `dbus-java-daermon` if it is installed.
+ * Re-install may fail on Windows due to JRE file being in use.
+
 ### 1.0.1
 
  * Windows had incorrect classpath for dj-feet.exe.

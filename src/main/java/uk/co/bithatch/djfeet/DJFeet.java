@@ -10,6 +10,7 @@ import org.kordamp.ikonli.fontawesome.FontAwesome;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -57,6 +58,7 @@ public class DJFeet {
 										getTabs().add(new DBusConnectionTab("D-Bus Java",
 												DBusConnection.getConnection(address)));
 									} catch (Exception e) {
+										e.printStackTrace();
 									}
 									int insertPoint = getTabs().size();
 									try {
@@ -83,6 +85,9 @@ public class DJFeet {
 									String address = input.showAndWait().orElse(null);
 									if (address == null) {
 										getSelectionModel().select(0);
+										if(getTabs().isEmpty())
+											System.exit(0);
+											
 									} else {
 										try {
 											getTabs().add(insertPoint, new DBusConnectionTab(address,
@@ -91,6 +96,7 @@ public class DJFeet {
 										} catch (Exception e) {
 											e.printStackTrace();
 											getSelectionModel().select(0);
+											Platform.runLater(() -> createBusTab(insertPoint));
 										}
 									}
 								}
