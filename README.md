@@ -11,6 +11,16 @@ Installers are provided for Linux, Windows and Mac OS. Download and run the GUI 
  * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_unix_1_0_2.sh)  
  * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_macos_1_0_2.dmg)  
  * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_windows-x64_1_0_2.exe)
+ 
+### Run From Source
+
+To run from source, you will need at least version *3.8.3* of [Apache Maven](https://maven.apache.org/) and a Java 17 development kit. I recommended downloading from [Adoptium](https://adoptium.net/).
+
+Simply run the following from the directory you clone to.
+
+```
+mvn javafx:run
+```
 
 ## Usage
 
@@ -47,6 +57,7 @@ With the installers, also included are easy launchers for all of the [dbus-java-
  * `dbus-java-interface-code-generator`. Geneate a Java interface from exported objects.
  * `dbus-java-viewer`. Simple Swing UI based viewer.
  * `dbus-java-type-string-to-java`. Convert a DBus type string to Java.
+ 
  
 ## Changes
 

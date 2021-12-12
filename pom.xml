@@ -9,7 +9,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <javafx.version>17.0.2-ea+1</javafx.version>
         <dbus.version>4.0.0-SNAPSHOT</dbus.version>
-        <main.class>uk.co.bithatch.d.DJFeet</main.class>
+        <main.class>uk.co.bithatch.djfeet.DJFeet</main.class>
         <attach.extended.version>4.0.12</attach.extended.version>
         <attach.extended.classifier>desktop</attach.extended.classifier>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
