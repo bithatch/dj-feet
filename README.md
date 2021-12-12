@@ -63,7 +63,7 @@ With the installers, also included are easy launchers for all of the [dbus-java-
 
 ### 1.0.2
 
- * Windows dj-feet not automatically loading `dbus-java-daermon` if it is installed.
+ * Windows dj-feet not automatically loading `dbus-java-daemon` if it is installed.
  * Re-install may fail on Windows due to JRE file being in use.
  * Better internal monitoring of bus events.
 
