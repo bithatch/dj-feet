@@ -24,7 +24,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 
 import org.freedesktop.dbus.Marshalling;
-import org.freedesktop.dbus.bin.Activator;
 import org.freedesktop.dbus.bin.EmbeddedDBusDaemon;
 import org.freedesktop.dbus.connections.BusAddress;
 import org.freedesktop.dbus.connections.transports.TransportBuilder;
@@ -68,7 +67,6 @@ public class DBusDaemon extends Thread implements Closeable {
     private Object                                             uniqueLock = new Object();
     private DBusServer                                         dbusServer = new DBusServer();
     private DBusDaemonSenderThread                             sender     = new DBusDaemonSenderThread();
-    private Activator								   		   activator  = null; 
 
     public DBusDaemon() {
         setName(getClass().getSimpleName() + "-Thread");
@@ -121,16 +119,6 @@ public class DBusDaemon extends Thread implements Closeable {
         }
         return l;
     }
-
-    public Activator getActivator() {
-		return activator;
-	}
-
-	public void setActivator(Activator activator) {
-		synchronized(names) {
-			this.activator = activator;
-		}
-	}
 
 	@Override
     public synchronized void start() {
@@ -698,19 +686,7 @@ public class DBusDaemon extends Thread implements Closeable {
 
         @Override
         public String[] ListActivatableNames() {
-        	synchronized(names) {
-        		if(activator == null)
-        			return new String[0];
-        		else {
-        			List<String> activatable = new ArrayList<>(names.size());
-        			for(Map.Entry<String, ConnectionStruct> en : names.entrySet()) {
-        				if(activator.isActivatable(en.getKey())) {
-        					activatable.add(en.getKey());
-        				}
-        			}
-        			return activatable.toArray(new String[0]);
-        		}
-        	}
+        	return new String[0];
         }
 
         @Override

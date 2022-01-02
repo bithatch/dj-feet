@@ -8,9 +8,9 @@ A cross-platform, JavaFX based clone of [D-Feet](https://wiki.gnome.org/Apps/DFe
 
 Installers are provided for Linux, Windows and Mac OS. Download and run the GUI installers appropriate for your desktop.
 
- * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_unix_1_0_2.sh)  
- * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_macos_1_0_2.dmg)  
- * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.2/dj-feet_windows-x64_1_0_2.exe)
+ * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_unix_1_0_3.sh)  
+ * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_macos_1_0_3.dmg)  
+ * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_windows-x64_1_0_3.exe)
  
 ### Run From Source
 
@@ -60,6 +60,10 @@ With the installers, also included are easy launchers for all of the [dbus-java-
  
  
 ## Changes
+
+### 1.0.3
+
+ * Use official release of dbus-java-4.0.0. 
 
 ### 1.0.2
 

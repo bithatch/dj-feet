@@ -90,11 +90,9 @@ public class DBusConnectionTab extends Tab {
 						BusData bd = bdIt.next();
 						if (e.oldOwner.equals(bd.getOwner())) {
 							bd.setOwner(e.newOwner);
-							busNames.refresh();
 							break;
 						}
 					}
-					Collections.sort(names);
 				});
 			}
 		});
@@ -130,6 +128,7 @@ public class DBusConnectionTab extends Tab {
 		busNames = new ListView<>(filteredData);
 		busNames.setCellFactory(lv -> new BusCell());
 		busNames.getSelectionModel().selectedItemProperty().addListener((c, o, n) -> {
+			System.out.println("C: o "+ o + " n " + n);
 			update();
 		});
 
