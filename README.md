@@ -8,9 +8,9 @@ A cross-platform, JavaFX based clone of [D-Feet](https://wiki.gnome.org/Apps/DFe
 
 Installers are provided for Linux, Windows and Mac OS. Download and run the GUI installers appropriate for your desktop.
 
- * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_unix_1_0_3.sh)  
- * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_macos_1_0_3.dmg)  
- * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.0.3/dj-feet_windows-x64_1_0_3.exe)
+ * [Linux Installer](https://github.com/bithatch/dj-feet/releases/download/1.1.0/dj-feet_unix_1_0_3.sh)  
+ * [Mac OS Installer](https://github.com/bithatch/dj-feet/releases/download/1.1.0/dj-feet_macos_1_0_3.dmg)  
+ * [Windows Installer](https://github.com/bithatch/dj-feet/releases/download/1.1.0/dj-feet_windows-x64_1_0_3.exe)
  
 ### Run From Source
 
@@ -33,6 +33,8 @@ What is available when you start the application will depend on the operating sy
  * If there are no default buses available, you will be immediately prompted for a bus address.
 
 Other features include :-
+
+ * Export existing DBus services as Java code (uses dbus-java's code generator) 
 
  * Filter bus names by typing in the search box at the top-left of the user interface.
  
@@ -61,7 +63,15 @@ With the installers, also included are easy launchers for all of the [dbus-java-
  
 ## Changes
 
-### 1.0.3
+### 1.1.0
+
+ * Use (in development) dbus-java-5.0.0.
+ * Now uses JPMS
+ * Improvements to export. Option to use `@DBusBoundProperty`, Disable Filter and set alternative package name (now in upstream)
+ * Now uses [JMetro](https://www.pixelduke.com/java-javafx-theme-jmetro/) as skin. Looks more at home on Windows.
+ * Several fixes for method executing, now supports `new variant(<val>[,'<sig>'])`. See [#2](https://github.com/bithatch/dj-feet/issues/2)
+
+### 1.1.0
 
  * Use official release of dbus-java-4.0.0. 
 

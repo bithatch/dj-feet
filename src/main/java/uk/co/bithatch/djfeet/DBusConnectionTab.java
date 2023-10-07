@@ -1,9 +1,8 @@
 package uk.co.bithatch.djfeet;
 
-import java.io.BufferedReader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -19,7 +18,6 @@ import org.freedesktop.dbus.interfaces.DBus;
 import org.freedesktop.dbus.interfaces.Introspectable;
 import org.freedesktop.dbus.interfaces.Properties;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.kordamp.ikonli.fontawesome.FontAwesome;
@@ -31,20 +29,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.css.PseudoClass;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.TextFlow;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import uk.co.bithatch.djfeet.ArgumentData.Direction;
 
 public class DBusConnectionTab extends Tab {
@@ -59,9 +59,13 @@ public class DBusConnectionTab extends Tab {
 	private FilteredList<BusData> filteredData;
 	private ObservableList<BusData> names;
 	private List<String> activatable;
+	private Stage stage;
+	private ButtonBase refresh;
+	private ButtonBase export;
 
-	public DBusConnectionTab(String text, DBusConnection connection) throws DBusException {
+	public DBusConnectionTab(Stage stage, String text, DBusConnection connection) throws DBusException {
 		super(text);
+		this.stage = stage;
 		this.connection = connection;
 
 		dbus = connection.getRemoteObject("org.freedesktop.DBus", "/org/freedesktop/DBus", DBus.class);
@@ -70,8 +74,18 @@ public class DBusConnectionTab extends Tab {
 			if (e.oldOwner.equals("") && !e.newOwner.equals("")) {
 				var newBusData = createBusData(e.name, e.newOwner);
 				Platform.runLater(() -> {
+					/*
+					 * Do our own sort, using Collections.sort() can cause excessive swaps, losing
+					 * the selection
+					 */
+					for (int i = 0; i < names.size(); i++) {
+						var n = names.get(i);
+						if (newBusData.compareTo(n) < 0) {
+							names.add(i, newBusData);
+							return;
+						}
+					}
 					names.add(0, newBusData);
-					Collections.sort(names);
 				});
 			} else if (e.newOwner.equals("") && !e.oldOwner.equals("")) {
 				Platform.runLater(() -> {
@@ -82,7 +96,6 @@ public class DBusConnectionTab extends Tab {
 							break;
 						}
 					}
-					Collections.sort(names);
 				});
 			} else {
 				Platform.runLater(() -> {
@@ -101,7 +114,7 @@ public class DBusConnectionTab extends Tab {
 		 * Bus names. Note ListNames() does not seem to list all names, we must add the
 		 * activatable names as well.
 		 */
-		Set<String> allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
+		var allNames = new LinkedHashSet<>(Arrays.asList(dbus.ListNames()));
 		try {
 			activatable = Arrays.asList(dbus.ListActivatableNames());
 		} catch (DBusExecutionException dbe) {
@@ -128,7 +141,6 @@ public class DBusConnectionTab extends Tab {
 		busNames = new ListView<>(filteredData);
 		busNames.setCellFactory(lv -> new BusCell());
 		busNames.getSelectionModel().selectedItemProperty().addListener((c, o, n) -> {
-			System.out.println("C: o "+ o + " n " + n);
 			update();
 		});
 
@@ -146,11 +158,6 @@ public class DBusConnectionTab extends Tab {
 		busAddress = new Label("");
 		busName = new Label("");
 		uniqueName = new Label("");
-		var refreshIcon = new FontIcon(FontAwesome.REFRESH);
-		refreshIcon.setIconSize(32);
-		var refresh = new Hyperlink(null, refreshIcon);
-		refresh.setAlignment(Pos.CENTER);
-		refresh.setOnAction((a) -> update());
 		var busNameDetails = new MigPane("fill, wrap 2", "[][]", "[][][]");
 		busNameDetails.add(new Label("Address:"));
 		busNameDetails.add(busAddress);
@@ -159,14 +166,44 @@ public class DBusConnectionTab extends Tab {
 		busNameDetails.add(new Label("Unique name:"));
 		busNameDetails.add(uniqueName);
 
+		// Refresh
+		var refreshIcon = new FontIcon(FontAwesome.REFRESH);
+		refreshIcon.setIconSize(32);
+		refresh = new Button("Refresh", refreshIcon);
+//		refresh.getStyleClass().setAll("btn", "btn-primary");
+		refresh.setAlignment(Pos.CENTER);
+		refresh.setContentDisplay(ContentDisplay.TOP);
+		refresh.setOnAction((a) -> update());
+
+		// Export
+		var exportIcon = new FontIcon(FontAwesome.SAVE);
+//		exportIcon.getStyleClass().add(JMetroStyleClass.BACKGROUND);
+		exportIcon.setIconSize(32);
+		export = new Button("Export", exportIcon);
+//		export.getStyleClass().setAll("btn", "btn-primary");
+		export.setContentDisplay(ContentDisplay.TOP);
+		export.setAlignment(Pos.CENTER);
+		export.setOnAction((a) -> export());
+
+		// Actions
+		var tools = new HBox();
+		tools.setPadding(new Insets(4));
+		tools.setSpacing(4);
+		tools.setFillHeight(true);
+		tools.setAlignment(Pos.CENTER);
+		tools.getChildren().add(refresh);
+		tools.getChildren().add(export);
+
 		// Right Top
 		var rightTop = new BorderPane();
-		rightTop.setRight(refresh);
+		rightTop.setRight(tools);
 		rightTop.setCenter(busNameDetails);
 
 		// Tree View
-		PseudoClass group = PseudoClass.getPseudoClass("group");
+		var group = PseudoClass.getPseudoClass("group");
 		objects = new TreeView<>(new TreeItem<>(new ObjectData(null)));
+		objects.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		objects.getSelectionModel().selectedItemProperty().addListener((c, o, n) -> setAvailable());
 		objects.setOnMouseClicked(e -> {
 			if (e.getClickCount() == 2) {
 				TreeItem<BusTreeData> selected = objects.getSelectionModel().getSelectedItem();
@@ -199,8 +236,7 @@ public class DBusConnectionTab extends Tab {
 
 	void loadProperty(PropertyData propData) {
 		try {
-			Properties props = connection.getRemoteObject(
-					propData.getInterfaceData().getObjectData().getBusData().getName(),
+			var props = connection.getRemoteObject(propData.getInterfaceData().getObjectData().getBusData().getName(),
 					propData.getInterfaceData().getObjectData().getPath(), Properties.class);
 			var val = props.Get(propData.getInterfaceData().getDisplayName(), propData.getName());
 			propData.setValue(val);
@@ -211,25 +247,24 @@ public class DBusConnectionTab extends Tab {
 	}
 
 	void executeMethod(MethodData methodData) {
-		ExecuteMethodPane exec = new ExecuteMethodPane(connection, methodData);
-		exec.show();
+		new ExecuteMethodPane(stage, connection, methodData).show();
 	}
 
 	ObservableList<BusData> getBusNames(Set<String> allNames) {
-		return FXCollections.observableArrayList(
-				allNames.stream().map(n -> createBusData(n, null)).collect(Collectors.toList()).toArray(new BusData[0]));
+		return FXCollections.observableArrayList(allNames.stream().map(n -> createBusData(n, null))
+				.collect(Collectors.toList()).toArray(new BusData[0]));
 	}
 
 	BusData createBusData(String n, String owner) {
 		long pid = -1;
 		String cmd = null;
 		try {
-			if(owner == null)
+			if (owner == null)
 				owner = dbus.GetNameOwner(n);
 			pid = dbus.GetConnectionUnixProcessID(n).longValue();
-			Path p = Paths.get("/proc/" + pid + "/cmdline");
+			var p = Paths.get("/proc/" + pid + "/cmdline");
 			if (Files.exists(p)) {
-				try (BufferedReader r = Files.newBufferedReader(p)) {
+				try (var r = Files.newBufferedReader(p)) {
 					cmd = String.join(" ", r.readLine().split("\0"));
 				}
 			}
@@ -242,10 +277,31 @@ public class DBusConnectionTab extends Tab {
 		return item.getValue() != null && item.getValue().isGroup();
 	}
 
+	void setAvailable() {
+		int opaths = 0;
+		for (var i : objects.getSelectionModel().getSelectedItems()) {
+			if (i.getValue() instanceof ObjectData)
+				opaths++;
+		}
+		refresh.setDisable(busNames.getSelectionModel().isEmpty());
+		export.setDisable(
+				busNames.getSelectionModel().isEmpty() || (objects.getSelectionModel().getSelectedItems().size() > 0
+						&& opaths != objects.getSelectionModel().getSelectedItems().size()));
+	}
+
+	void export() {
+		var sel = objects.getSelectionModel().getSelectedItems().isEmpty() ? objects.getRoot().getChildren()
+				: objects.getSelectionModel().getSelectedItems();
+		new ExportPane(stage, connection,
+				new ArrayList<ObjectData>(sel.stream().filter(o -> o.getValue() instanceof ObjectData)
+						.map(o -> (ObjectData) o.getValue()).collect(Collectors.toList())))
+				.show();
+	}
+
 	void update() {
-		ObservableList<TreeItem<BusTreeData>> rootChildren = objects.getRoot().getChildren();
+		var rootChildren = objects.getRoot().getChildren();
 		rootChildren.clear();
-		BusData selectedBus = busNames.getSelectionModel().getSelectedItem();
+		var selectedBus = busNames.getSelectionModel().getSelectedItem();
 		if (selectedBus == null) {
 			busAddress.setText("");
 			busName.setText("");
@@ -257,11 +313,12 @@ public class DBusConnectionTab extends Tab {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			busAddress.setText(connection.getAddress().getRawAddress());
+			busAddress.setText(connection.getAddress().toString());
 			busName.setText(selectedBus.getName());
 			uniqueName.setText(selectedBus.getOwner());
 		}
 		objects.setShowRoot(rootChildren.size() < 2);
+		setAvailable();
 	}
 
 	void visitNode(BusData busData, TreeItem<BusTreeData> rootTreeItem, TreeItem<BusTreeData> treeItem, String name,
@@ -271,11 +328,11 @@ public class DBusConnectionTab extends Tab {
 			return;
 		}
 
-		ObjectData e = addEntry(busData, name, path);
+		var e = addEntry(busData, name, path);
 		treeItem.setValue(e);
-		String introspectData = e.getIntrospectable().Introspect();
-		Document doc = Jsoup.parse(introspectData, Parser.xmlParser());
-		Element root = doc.root();
+		var introspectData = e.getIntrospectable().Introspect();
+		var doc = Jsoup.parse(introspectData, Parser.xmlParser());
+		var root = doc.root();
 		if (root.childrenSize() == 0)
 			return;
 		else {
@@ -287,16 +344,16 @@ public class DBusConnectionTab extends Tab {
 			return;
 		}
 		TreeItem<BusTreeData> interfacesItem = null;
-		for (Element element : root.children()) {
+		for (var element : root.children()) {
 			if (element.tagName().equals("interface")) {
 				if (interfacesItem == null) {
 					interfacesItem = new TreeItem<>(new GroupData("Interfaces"));
 					treeItem.getChildren().add(interfacesItem);
 				}
-				TreeItem<BusTreeData> interfaceItem = createInterfaceNode(e, element);
+				var interfaceItem = createInterfaceNode(e, element);
 				interfacesItem.getChildren().add(interfaceItem);
 			} else if (element.tagName().equals("node")) {
-				TreeItem<BusTreeData> child = new TreeItem<>();
+				var child = new TreeItem<BusTreeData>();
 				String nodeName = element.attr("name");
 				if (path.endsWith("/")) {
 					visitNode(busData, rootTreeItem, child, name, path + nodeName);
@@ -316,7 +373,7 @@ public class DBusConnectionTab extends Tab {
 		TreeItem<BusTreeData> methodsItem = null;
 		TreeItem<BusTreeData> signalsItem = null;
 		TreeItem<BusTreeData> propertiesItem = null;
-		for (Element memberEl : element.children()) {
+		for (var memberEl : element.children()) {
 			if (memberEl.tagName().equals("method")) {
 				if (methodsItem == null) {
 					methodsItem = new TreeItem<>(new GroupData("Methods"));
@@ -344,8 +401,8 @@ public class DBusConnectionTab extends Tab {
 	}
 
 	TreeItem<BusTreeData> createMethodNode(InterfaceData interfaceData, Element element) {
-		MethodData methodData = new MethodData(interfaceData, element.attr("name"));
-		TreeItem<BusTreeData> methodItem = new TreeItem<>(methodData);
+		var methodData = new MethodData(interfaceData, element.attr("name"));
+		var methodItem = new TreeItem<BusTreeData>(methodData);
 		for (Element memberEl : element.children()) {
 			if (memberEl.tagName().equals("arg")) {
 				methodData.getArguments().add(new ArgumentData(memberEl, Direction.IN));
@@ -359,8 +416,8 @@ public class DBusConnectionTab extends Tab {
 
 	TreeItem<BusTreeData> createSignalNode(Element element) {
 		var signalData = new SignalData(element.attr("name"));
-		TreeItem<BusTreeData> methodItem = new TreeItem<>(signalData);
-		for (Element memberEl : element.children()) {
+		var methodItem = new TreeItem<BusTreeData>(signalData);
+		for (var memberEl : element.children()) {
 			if (memberEl.tagName().equals("arg")) {
 				signalData.getArguments().add(new ArgumentData(memberEl, Direction.OUT));
 			} else if (memberEl.tagName().equals("annotation")) {
@@ -373,8 +430,8 @@ public class DBusConnectionTab extends Tab {
 
 	TreeItem<BusTreeData> createPropertiesNode(InterfaceData interfaceData, Element element) {
 		var propertiesData = new PropertyData(interfaceData, element);
-		TreeItem<BusTreeData> methodItem = new TreeItem<>(propertiesData);
-		for (Element memberEl : element.children()) {
+		var methodItem = new TreeItem<BusTreeData>(propertiesData);
+		for (var memberEl : element.children()) {
 			if (memberEl.tagName().equals("annotation")) {
 				propertiesData.getAnnotations().add(new BusAnnotation(memberEl));
 			} else
@@ -390,160 +447,5 @@ public class DBusConnectionTab extends Tab {
 		Introspectable introspectable = connection.getRemoteObject(name, path, Introspectable.class);
 		entry.setIntrospectable(introspectable);
 		return entry;
-	}
-
-	public final class BusCellController {
-		private BorderPane view = new BorderPane();
-		private Label label = new Label();
-		private Label info = new Label();
-
-		{
-			info.setAlignment(Pos.CENTER_LEFT);
-			label.setAlignment(Pos.CENTER_LEFT);
-			label.getStyleClass().add("strong");
-			view.setTop(label);
-			view.setBottom(info);
-		}
-
-		public void setItem(BusData item) {
-			label.setText(item.getName());
-			StringBuilder b = new StringBuilder();
-			b.append("activatable: ");
-			b.append(item.isActivatable() ? "yes" : "no");
-			if (item.getPid() > -1) {
-				b.append(", pid: ");
-				b.append(item.getPid());
-			}
-			if (item.getCmd() != null) {
-				b.append(", cmd: ");
-				b.append(item.getCmd());
-			}
-			info.setText(b.toString());
-		}
-
-		public Node getView() {
-			return view;
-		}
-	}
-
-	public final class BusCell extends ListCell<BusData> {
-
-		private final BusCellController ccc = new BusCellController();
-		private final Node view = ccc.getView();
-
-		@Override
-		protected void updateItem(BusData item, boolean empty) {
-			super.updateItem(item, empty);
-			if (empty) {
-				setGraphic(null);
-			} else {
-				ccc.setItem(item);
-				setGraphic(view);
-			}
-		}
-	}
-
-	public final class ArgumentsCellController {
-		private Label label = new Label();
-		private TextFlow args = new TextFlow();
-
-		{
-			args.setPrefHeight(20);
-
-		}
-
-		public void setItem(BusTreeData item) {
-			label.setText(item.getDisplayName());
-			args.getChildren().clear();
-			args.getChildren().add(label);
-			args.getChildren().addAll(((ArgumentsData) item).argumentsText());
-		}
-
-		public Node getView() {
-			return args;
-		}
-	}
-
-	public final class PropertiesCellController {
-		private Label label = new Label();
-		private TextFlow args = new TextFlow();
-		private Label access = new Label();
-		private Label val = new Label();
-
-		{
-			args.setPrefHeight(20);
-		}
-
-		public void setItem(BusTreeData item) {
-			label.setText(item.getDisplayName());
-			switch (((PropertyData) item).getAccess()) {
-			case WRITE:
-				access.setText("(write)");
-				break;
-			case READWRITE:
-				access.setText("(read / write)");
-				break;
-			default:
-				access.setText("(read)");
-				break;
-			}
-			args.getChildren().clear();
-			args.getChildren().addAll(((PropertyData) item).typeGraphic());
-			args.getChildren().add(label);
-			args.getChildren().add(access);
-			if (((PropertyData) item).getValue() != null) {
-				val.setText(" = " + ((PropertyData) item).getFormattedValue());
-				args.getChildren().add(val);
-			}
-		}
-
-		public Node getView() {
-			return args;
-		}
-	}
-
-	public final class DefaultCellController {
-		private Label label = new Label();
-
-		{
-			label.setAlignment(Pos.CENTER_LEFT);
-		}
-
-		public void setItem(BusTreeData item) {
-			label.setText(item.getDisplayName());
-		}
-
-		public Node getView() {
-			return label;
-		}
-	}
-
-	public final class BusTreeCell extends TreeCell<BusTreeData> {
-
-		private final ArgumentsCellController argumentsController = new ArgumentsCellController();
-		private final Node argumentsView = argumentsController.getView();
-		private final PropertiesCellController propertiesController = new PropertiesCellController();
-		private final Node propertiesView = propertiesController.getView();
-		private final DefaultCellController defaultController = new DefaultCellController();
-		private final Node defaultView = defaultController.getView();
-
-		@Override
-		protected void updateItem(BusTreeData item, boolean empty) {
-			super.updateItem(item, empty);
-			if (empty) {
-				setGraphic(null);
-			} else {
-				if (item instanceof PropertyData) {
-					propertiesController.setItem(item);
-					setGraphic(propertiesView);
-				} else if (item instanceof ArgumentsData) {
-					argumentsController.setItem(item);
-					setGraphic(argumentsView);
-				} else {
-					defaultController.setItem(item);
-					setGraphic(defaultView);
-				}
-			}
-		}
 	}
 }

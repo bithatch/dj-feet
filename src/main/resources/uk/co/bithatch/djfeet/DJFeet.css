@@ -1,10 +1,15 @@
 .tree-cell {
     -fx-font-weight: normal ;
 }
+
 .tree-cell:group, .strong {
     -fx-font-weight: bold ;
 }
 
 .spaced {
 	-fx-padding: 4px;
+}
+
+Text {
+    text_color: zzzzz; /* NOTE: Hack. Makes JMetro parser fail so the setFill in AnnotatableData.colorText() works properly */
 }

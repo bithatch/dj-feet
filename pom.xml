@@ -1,19 +1,21 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>uk.co.bithatch</groupId>
     <artifactId>dj-feet</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
     <name>Java clone of D-Feet</name>
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <javafx.version>17.0.2-ea+1</javafx.version>
-        <dbus.version>4.0.0</dbus.version>
-        <main.class>uk.co.bithatch.djfeet.DJFeet</main.class>
+        <javafx.version>21</javafx.version>
+        <dbus.version>5.0.0-SNAPSHOT</dbus.version>
+        <main.class>uk.co.bithatch.djfeet.DJFeetApp</main.class>
         <attach.extended.version>4.0.12</attach.extended.version>
         <attach.extended.classifier>desktop</attach.extended.classifier>
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
-        <gluonfx.maven.plugin.version>1.0.9</gluonfx.maven.plugin.version>
+        <gluonfx.maven.plugin.version>1.0.16</gluonfx.maven.plugin.version>
         <install4j.home>NOT_CONFIGURED</install4j.home>
         <install4j.winKeystorePassword>NOT_CONFIGURED</install4j.winKeystorePassword>
         <install4j.macKeystorePassword>NOT_CONFIGURED</install4j.macKeystorePassword>
@@ -21,23 +23,44 @@
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>${javafx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
+            <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.hypfvieh</groupId>
             <artifactId>dbus-java-core</artifactId>
             <version>${dbus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.hypfvieh</groupId>
+            <artifactId>dbus-java-utils</artifactId>
+            <version>${dbus.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.hypfvieh</groupId>
+                    <artifactId>
+                        dbus-java-transport-jnr-unixsocket
+                    </artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.hypfvieh</groupId>
@@ -49,6 +72,13 @@
             <artifactId>dbus-java-transport-native-unixsocket</artifactId>
             <version>${dbus.version}</version>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>com.sshtools</groupId>
+            <artifactId>dbus-java-transport-ssh</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>com.miglayout</groupId>
             <artifactId>miglayout-javafx</artifactId>
@@ -73,6 +103,56 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
             <version>5.3.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jfxtras</groupId>
+            <artifactId>jmetro</artifactId>
+            <version>11.6.15</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-controls</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.controlsfx</groupId>
+                    <artifactId>controlsfx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-graphics</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.palexdev</groupId>
+            <artifactId>scenicview</artifactId>
+            <version>17.0.2</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-base</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-graphics</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-fxml</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>2.0.9</version>
         </dependency>
 
     </dependencies>
@@ -112,171 +192,220 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/dependencies</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>copy-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                            <excludeClassifiers>linux,mac,win</excludeClassifiers>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-dbus-urils</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.github.hypfvieh</groupId>
-                                    <artifactId>dbus-java-utils</artifactId>
-                                    <version>${dbus.version}</version>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-javafx-win</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/dependencies/win</outputDirectory>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-base</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>win</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-controls</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>win</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-graphics</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>win</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-media</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>win</classifier>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-javafx-mac</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/dependencies/mac</outputDirectory>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-base</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>mac</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-controls</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>mac</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-graphics</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>mac</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-media</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>mac</classifier>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-javafx-linux</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/dependencies/linux</outputDirectory>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-base</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>linux</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-controls</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>linux</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-graphics</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>linux</classifier>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.openjfx</groupId>
-                                    <artifactId>javafx-media</artifactId>
-                                    <version>${javafx.version}</version>
-                                    <classifier>linux</classifier>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.install4j</groupId>
-                <artifactId>install4j-maven</artifactId>
-                <version>9.0.5</version>
-                <executions>
-                    <execution>
-                        <id>compile-installers</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <projectFile>${project.basedir}/src/main/installer/dj-feet.install4j</projectFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+
+
+    <profiles>
+        <!-- Graal Native Image -->
+
+        <profile>
+            <id>native-images</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <version>1.0.16</version>
+                        <configuration>
+                            <mainClass>${main.class}</mainClass>
+                        </configuration>
+
+                        <executions>
+                            <execution>
+                                <id>dj-feet-native-image</id>
+                                <?m2e ignore?>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+
+        </profile>
+
+        <profile>
+            <id>install4j-installers</id>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/dependencies</outputDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>copy-dependencies</id>
+                                <?m2e ignore?>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <overWriteReleases>false</overWriteReleases>
+                                    <overWriteSnapshots>false</overWriteSnapshots>
+                                    <overWriteIfNewer>true</overWriteIfNewer>
+                                    <excludeClassifiers>linux,mac,win</excludeClassifiers>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-dbus-urils</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.hypfvieh</groupId>
+                                            <artifactId>dbus-java-utils</artifactId>
+                                            <version>${dbus.version}</version>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-javafx-win</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>
+                                        ${project.build.directory}/dependencies/win</outputDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-base</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>win</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-controls</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>win</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-graphics</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>win</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-media</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>win</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-javafx-mac</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>
+                                        ${project.build.directory}/dependencies/mac</outputDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-base</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>mac</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-controls</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>mac</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-graphics</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>mac</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-media</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>mac</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>copy-javafx-linux</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>
+                                        ${project.build.directory}/dependencies/linux</outputDirectory>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-base</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>linux</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-controls</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>linux</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-graphics</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>linux</classifier>
+                                        </artifactItem>
+                                        <artifactItem>
+                                            <groupId>org.openjfx</groupId>
+                                            <artifactId>javafx-media</artifactId>
+                                            <version>${javafx.version}</version>
+                                            <classifier>linux</classifier>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.install4j</groupId>
+                        <artifactId>install4j-maven</artifactId>
+                        <version>10.0.6</version>
+                        <executions>
+                            <execution>
+                                <id>compile-installers</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <projectFile>
+                                        ${project.basedir}/src/main/installer/dj-feet.install4j</projectFile>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <pluginRepositories>
         <pluginRepository>

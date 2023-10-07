@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="9.0.5" transformSequenceNumber="9">
+<install4j version="10.0.6" transformSequenceNumber="10">
   <directoryPresets config="../../../target/dj-feet-0.0.1-SNAPSHOT.jar" />
-  <application name="DJ Feet" applicationId="9111-8436-8395-1844" mediaDir="media" shortName="dj-feet" publisher="Bithatch" publisherWeb="https://bithatch.co.uk" version="4.0.0-SNAPSHOT" allPathsRelative="true" macVolumeId="865270be2028a846">
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17+35" />
+  <application name="DJ Feet" applicationId="9111-8436-8395-1844" mediaDir="media" shortName="dj-feet" publisher="Bithatch" publisherWeb="https://bithatch.co.uk" version="5.0.0-SNAPSHOT" allPathsRelative="true" macVolumeId="865270be2028a846" javaMinVersion="17">
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="20/jdk-20.0.2+9" />
   </application>
   <files>
     <mountPoints>
@@ -50,11 +50,13 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-list" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.utils.bin.ListDBus">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -65,12 +67,14 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-daemonc" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.bin.DBusDaemon">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
           <archive location="lib/dj-feet-${compiler:sys.version}.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -78,14 +82,16 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       </iconImageFiles>
     </launcher>
     <launcher name="dbus-java-viewer" id="35">
-      <executable name="dbus-java-viewer" iconSet="true" executableMode="gui" />
+      <executable name="dbus-java-viewer" iconSet="true" stderrFile="~/.dj-feet/dbus-java-viewer/error.log" redirectStdout="true" stdoutFile="~/.dj-feet/dbus-java-viewer/error.log" executableMode="gui" />
       <java mainClass="org.freedesktop.dbus.viewer.DBusViewer">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -96,11 +102,11 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-interface-code-generator" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.utils.generator.InterfaceCodeGenerator">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -111,11 +117,13 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-caller" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.utils.bin.Caller">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -126,11 +134,13 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-create-interface" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.utils.bin.CreateInterface">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -141,11 +151,13 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-type-string-to-java" iconSet="true" redirectStderr="false" executableMode="console" />
       <java mainClass="org.freedesktop.dbus.utils.translator.DBusTypeStringToJava">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -170,12 +182,14 @@ NOTE: This daemon is INSECURE. It is running on an open TCP port, and the full a
       <executable name="dbus-java-daemon" iconSet="true" stderrFile="daemon-error.log" redirectStdout="true" stdoutFile="daemon-output.log" executableMode="service" />
       <java mainClass="uk.co.bithatch.djfeet.DBusDaemon" arguments="--addresspref default --addressfile ${installer:sys.tempDir}/dbus-java.address --insecure --tcp --authmode AUTH_ANONYMOUS">
         <classPath>
-          <archive location="lib/dbus-java-transport-tcp-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-utils-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-core-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/dbus-java-transport-native-unixsocket-4.0.0-SNAPSHOT.jar" failOnError="false" />
-          <archive location="lib/slf4j-api-1.7.30.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-tcp-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-utils-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-core-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/dbus-java-transport-native-unixsocket-5.0.0-SNAPSHOT.jar" failOnError="false" />
+          <archive location="lib/slf4j-api-2.0.9.jar" failOnError="false" />
           <archive location="lib/dj-feet-${compiler:sys.version}.jar" failOnError="false" />
+          <archive location="lib/slf4j-simple-2.0.9.jar" failOnError="false" />
+          <archive location="lib/jul-to-slf4j-2.0.9.jar" failOnError="false" />
         </classPath>
       </java>
       <iconImageFiles>
@@ -657,7 +671,7 @@ return console.askYesNo(message, true);
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="Windows" id="25">
+    <windows name="Windows" id="25" architecture="64">
       <exclude>
         <entry location="lib/linux" />
         <entry location="lib/mac" />

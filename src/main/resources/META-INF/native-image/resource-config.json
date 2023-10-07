@@ -1,5 +1,33 @@
 {
   "resources":{
-  "includes":[]},
-  "bundles":[]
+  "includes":[
+    {
+      "pattern":"\\QMETA-INF/resources/fontawesome/4.7.0/fonts/fontawesome-webfont.ttf\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/resources/ikonli/0.0.0/fonts/ikonli.ttf\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/org.freedesktop.dbus.spi.transport.ITransportProvider\\E"
+    }, 
+    {
+      "pattern":"\\QMETA-INF/services/org.kordamp.ikonli.IkonHandler\\E"
+    }, 
+    {
+      "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+    }, 
+    {
+      "pattern":"\\Quk/co/bithatch/djfeet/DJFeet.css\\E"
+    }
+  ]},
+  "bundles":[
+    {
+      "name":"com.sun.javafx.tk.quantum.QuantumMessagesBundle",
+      "locales":[""]
+    }, 
+    {
+      "name":"com/sun/javafx/scene/control/skin/resources/controls",
+      "locales":[""]
+    }
+  ]
 }

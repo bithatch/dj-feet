@@ -78,9 +78,10 @@ public abstract class AnnotatbleData implements BusTreeData {
 		return typeText;
 	}
 
-	protected static Text colorText(String text, Paint color) {
+	protected static Text colorText(String text, Color color) {
 		Text t = new Text(text);
 		t.setFill(color);
+//		t.setStyle("-fx-text-fill: #" + color.toString().substring(2) + " !important;");
 		return t;
 	}
 }
