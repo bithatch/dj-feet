@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="10.0.6" transformSequenceNumber="10">
+<install4j version="10.0.8" transformSequenceNumber="10">
   <directoryPresets config="../../../target/dj-feet-0.0.1-SNAPSHOT.jar" />
   <application name="DJ Feet" applicationId="9111-8436-8395-1844" mediaDir="media" shortName="dj-feet" publisher="Bithatch" publisherWeb="https://bithatch.co.uk" version="5.0.0-SNAPSHOT" allPathsRelative="true" macVolumeId="865270be2028a846" javaMinVersion="17">
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="20/jdk-20.0.2+9" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="21/jdk-21.0.4+7" />
   </application>
   <files>
     <mountPoints>
